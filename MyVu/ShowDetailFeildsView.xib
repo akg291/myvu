@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="10117" systemVersion="15G1004" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="SF-UI-Display-Regular.otf">
+            <string>SFUIDisplay-Regular</string>
+            <string>SFUIDisplay-Regular</string>
+        </mutableArray>
+        <mutableArray key="SF-UI-Text-BoldItalic.otf">
+            <string>SFUIText-BoldItalic</string>
+        </mutableArray>
+        <mutableArray key="SF-UI-Text-Heavy.otf">
+            <string>SFUIText-Heavy</string>
+        </mutableArray>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="AsN-EQ-S20" customClass="ShowDetailFeilds" customModule="MyVu" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="1920" height="500"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="77Y-gs-CCl">
+                    <rect key="frame" x="0.0" y="0.0" width="1920" height="500"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8wn-vY-uL1">
+                    <rect key="frame" x="50" y="50" width="608" height="342"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Rating | Action,Sci Fi,Thiriller,Fantasy 15 May,2016" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q2V-Xz-oGK">
+                    <rect key="frame" x="699" y="50" width="1052" height="32"/>
+                    <fontDescription key="fontDescription" name="SFUIDisplay-Regular" family="SF UI Display" pointSize="26"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Mad Max : Fury Road (2015)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Jr-uL-aNS">
+                    <rect key="frame" x="699" y="90" width="1052" height="70"/>
+                    <fontDescription key="fontDescription" name="SFUIText-Heavy" family="SF UI Text" pointSize="48"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="20" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qkO-SH-6wu">
+                    <rect key="frame" x="699" y="220" width="1190" height="172"/>
+                    <string key="text">Description s klflas dfjsa flksajdfl jsdlkjfl sdkjf lskdjf sdkjf sdjflkasjdf kasjdf aslkdfjlk;asd fkjsd lkf jdslakjf lsdkjf lskdjflksadjf lkajsdklfksdjf ksdjf lksdajfsdjkf skdjf ksdjfkasdfjsdak jflksajfkasdjfajsdlfkjasdkl fjasdfjsadf lsdjfgldfj lgk;sdj fglk djsflg jdflksjg kldfsj gfdjlkg jdlskfjg lksdjfglk sdjfgkljsdflkg jsdfklg jdlksfjg lkdfsjg dskfjglkdfsjgksdfjg skdjfglksdjfgk jdsfgj kldsfjg kdsjfgdfjg djflg jdfkgj ldfj glkdfj lkdfjsgkljsdflgjfdklgjdsfgjsdlfjgklfdjgksdjfgjls;dfgsDescription s klflas dfjsa flksajdfl jsdlkjfl sdkjf lskdjf sdkjf sdjflkasjdf kasjdf aslkdfjlk;asd fkjsd lkf jdslakjf lsdkjf lskdjflksadjf lkajsdklfksdjf ksdjf lksdajfsdjkf skdjf ksdjfkasdfjsdak jflksajfkasdjfajsdlfkjasdkl fjasdfjsadf lsdjfgldfj lgk;sdj fglk djsflg jdflksjg kldfsj gfdjlkg jdlskfjg lksdjfglk sdjfgkljsdflkg jsdfklg jdlksfjg lkdfsjg dskfjglkdfsjgksdfjg skdjfglksdjfgk jdsfgj kldsfjg kdsjfgdfjg djflg jdfkgj ldfj glkdfj lkdfjsgkljsdflgjfdklgjdsfgjsdlfjgklfdjgksdjfgjls;dfgsDescription s klflas dfjsa flksajdfl jsdlkjfl sdkjf lskdjf sdkjf sdjflkasjdf kasjdf aslkdfjlk;asd fkjsd lkf jdslakjf lsdkjf lskdjflksadjf lkajsdklfksdjf ksdjf lksdajfsdjkf skdjf ksdjfkasdfjsdak jflksajfkasdjfajsdlfkjasdkl fjasdfjsadf lsdjfgldfj lgk;sdj fglk djsflg jdflksjg kldfsj gfdjlkg jdlskfjg lksdjfglk sdjfgkljsdflkg jsdfklg jdlksfjg lkdfsjg dskfjglkdfsjgksdfjg skdjfglksdjfgk jdsfgj kldsfjg kdsjfgdfjg djflg jdfkgj ldfj glkdfj lkdfjsgkljsdflgjfdklgjdsfgjsdlfjgklfdjgksdjfgjls;dfgs</string>
+                    <fontDescription key="fontDescription" name="SFUIDisplay-Regular" family="SF UI Display" pointSize="26"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Drama,5 Seasons" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xov-F7-nj6">
+                    <rect key="frame" x="699" y="162" width="1052" height="65"/>
+                    <fontDescription key="fontDescription" name="SFUIText-BoldItalic" family="SF UI Text" pointSize="30"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="9.5" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kw5-Lh-vvi">
+                    <rect key="frame" x="1759" y="82" width="100" height="50"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view alpha="0.20000000000000001" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IUl-dC-jxu">
+                    <rect key="frame" x="1759" y="75" width="100" height="50"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="imdb-icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="mM8-jY-Wfk">
+                    <rect key="frame" x="1769" y="50" width="80" height="40"/>
+                </imageView>
+            </subviews>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="background" destination="77Y-gs-CCl" id="2os-tu-3Pi"/>
+                <outlet property="genreAndNumberofSeasonsLbl" destination="Xov-F7-nj6" id="JS2-6e-6eV"/>
+                <outlet property="genreAndRatingLbl" destination="q2V-Xz-oGK" id="ItB-nK-g38"/>
+                <outlet property="imdbRatingsLbl" destination="Kw5-Lh-vvi" id="aGW-wR-wm0"/>
+                <outlet property="showDescriptionLbl" destination="qkO-SH-6wu" id="40F-PZ-ZKE"/>
+                <outlet property="showPoster" destination="8wn-vY-uL1" id="6rE-DM-YK9"/>
+                <outlet property="showTitleLbl" destination="1Jr-uL-aNS" id="qqD-5q-0I9"/>
+            </connections>
+            <point key="canvasLocation" x="427" y="446"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="imdb-icon.png" width="108" height="52"/>
+    </resources>
+</document>
