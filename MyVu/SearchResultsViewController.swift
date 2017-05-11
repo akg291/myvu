@@ -189,7 +189,7 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating,UIC
             guard let cell = cell as? CollectionViewContainerCell else { fatalError("Expected to display a `CollectionViewContainerCell`.") }
             // Configure the cell.
             let sectionDataItems = dataItemsByGroup[indexPath.section]
-            cell.configureWithDataItems(sectionDataItems)
+            //**cell.configureWithDataItems(sectionDataItems)
         }
     }
     func collectionView(collectionView: UICollectionView, canFocusItemAtIndexPath indexPath: NSIndexPath) -> Bool {

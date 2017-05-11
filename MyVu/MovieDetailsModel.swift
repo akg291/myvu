@@ -9,6 +9,24 @@
 import Foundation
 import ObjectMapper
 
+class MovieDataModel: Mappable {
+    
+    var status      :       String?
+    var data        :       MovieDetailsModel?
+    
+    //MARK: - Properties
+    
+    //MARK: - Init
+    required init?(_ map: Map){
+    }
+    
+    //MARK: - Mapper
+    func mapping(map: Map)    {
+        status  <- map["status"]
+        data    <- map["data"]
+    }
+}
+
 class MovieDetailsModel: Mappable {
 
     //MARK: - Properties
@@ -16,15 +34,17 @@ class MovieDetailsModel: Mappable {
     var title: String?
     var poster: String?
     var rating: String?
+	var mpaa	: String?
     var release_date: String?
     var group: String?
     var overview: String?
     var genres:[Genre]?
     var directors:[Director]?
     var cast:[Character]?
-    var duration: Int?
+    var duration: String?
     var imdb: String?
-    var purchase_ios_sources : [Source]?
+    var sources : [SourceModel]?
+	var related : MoviesSearchResultModel?
     var error: String?
     
     //MARK: - Init
@@ -33,10 +53,11 @@ class MovieDetailsModel: Mappable {
     
     //MARK: - Mapper
     func mapping(map: Map)    {
-        id <- map["id"]
+        id <- map["movie_id"]
         title <- map["title"]
         poster <- map["poster_240x342"]
         rating <- map["rating"]
+		mpaa	<- map["mpaa"]
         release_date <- map["release_date"]
         genres <- map["genres"]
         overview <- map["overview"]
@@ -44,8 +65,9 @@ class MovieDetailsModel: Mappable {
         cast <- map["cast"]
         duration <- map["duration"]
         imdb <- map["imdb"]
-        purchase_ios_sources <- map["purchase_ios_sources"]
-        error <- map["error"]
+        sources <- map["sources"]
+		related <- map["related"]
+		error <- map["error"]		
     }
 }
 
@@ -136,3 +158,8 @@ class Source: Mappable {
         print("app_required \(self.app_required)")
     }
 }
+
+
+
+
+

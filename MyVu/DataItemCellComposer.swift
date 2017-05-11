@@ -27,25 +27,18 @@ class DataItemCellComposer {
         // Set the cell's properties.
         //cell.representedDataItem = dataItem
         cell.episodeName.text = "\(dataItem.episode_number!) - "+"\(dataItem.title!)"
-        cell.episodeDate.text = (self.getFormatedDate(dataItem.first_aired!))
+        if dataItem.first_aired != nil {
+            print("DATE AIRED TIME : \(dataItem.first_aired)" )
+            cell.episodeDate.text = self.getFormatedDate(dataItem.first_aired!) //self.localizedDateTime(dataItem.first_aired!)
+        }
         cell.imageView.image = nil
         cell.imageView.backgroundColor = UIColor .whiteColor()
         cell.imageView.alpha = 1.0
-        let downlaoder : SDWebImageDownloader = SDWebImageDownloader .sharedDownloader()
-        if let imgUrl = dataItem.poster {
-            downlaoder.downloadImageWithURL(
-                NSURL(string: imgUrl),
-                options: SDWebImageDownloaderOptions.UseNSURLCache,
-                progress: nil,
-                completed: { (image, data, error, bool) -> Void in
-                    if image != nil {
-                        dispatch_async(dispatch_get_main_queue(), {
-                            cell.imageView.image = image
-                        })
-                    }
-            })
-            
+		
+		if let imgUrl = dataItem.poster {
+			cell.imageView.sd_setImageWithURL(NSURL(string: imgUrl))
         }
+		
         // No further work is necessary if the cell's image view has an image.
         guard cell.imageView.image == nil else { return }
     }
@@ -62,6 +55,16 @@ class DataItemCellComposer {
         cell.imageView.backgroundColor = UIColor .whiteColor()
         cell.imageView.alpha = 1.0
         //cell.imageView.image = DataItemCellComposer.processedImageCache.objectForKey(dataItem.identifier) as? UIImage
+        
+        
+        let url = NSURL(string: dataItem.artWork!)
+        cell.imageView.sd_setImageWithURL(url)
+        
+        return
+        
+        
+        //** Prev Code
+        
         let downlaoder : SDWebImageDownloader = SDWebImageDownloader .sharedDownloader()
         if ( dataItem.group == "Shows" ){
             if let imgUrl = dataItem.artWork {
@@ -186,21 +189,55 @@ class DataItemCellComposer {
         let bitmapContext = CGBitmapContextCreate(nil, imageWidth, imageHeight, 8, imageWidth * 4, colorSpace, bitmapInfo)
         // Draw the image into the graphics context.
         guard let imageRef = image.CGImage else { fatalError("Unable to get a CGImage from a UIImage.") }
-        CGContextDrawImage(bitmapContext, CGRect(origin: CGPoint.zero, size: image.size), imageRef)
+        CGContextDrawImage(bitmapContext!, CGRect(origin: CGPoint.zero, size: image.size), imageRef)
         // Create a new `CGImage` from the contents of the graphics context.
-        guard let newImageRef = CGBitmapContextCreateImage(bitmapContext) else { return image }
+        guard let newImageRef = CGBitmapContextCreateImage(bitmapContext!) else { return image }
         // Return a new `UIImage` created from the `CGImage`.
         return UIImage(CGImage: newImageRef)
     }
-    func getFormatedDate (dateString:String) -> String{
+    func getFormatedDate (dateString:String) -> String {
         var formatedDateString = String ()
         let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "YYYY/MM/dd"
+        dateFormatter.dateFormat = "yyyy/MM/dd"
         let temp = dateFormatter.dateFromString(dateString)
         print(temp)
         // convert to required string
-        dateFormatter.dateFormat = "dd MMM YYYY"
+        dateFormatter.dateFormat = "dd MMM yyyy"
+		//dateFormatter.locale = NSLocale(localeIdentifier: "en_US")
         formatedDateString = dateFormatter.stringFromDate(temp!)
-        return formatedDateString
+        
+        print(dateString)
+        print(formatedDateString)
+        
+        
+        
+        return self.localizedDateTime(formatedDateString)
     }
+	
+	
+	func localizedDateTime(dateString:String) -> String {
+		
+		print(dateString)
+        
+        let localeTemplate = NSLocale(localeIdentifier: NSLocale.preferredLanguages().first!)
+		let strDate = dateString
+		let strDateFormatter = NSDateFormatter()
+		strDateFormatter.dateFormat = "dd MMM yyyy"
+		
+		let date = strDateFormatter.dateFromString(strDate)
+		print(date)
+		
+		let dateFormatter = NSDateFormatter()
+		dateFormatter.timeStyle = .NoStyle
+		dateFormatter.dateStyle = .ShortStyle
+		
+		let locale = NSLocale.preferredLanguages().first
+		dateFormatter.locale = NSLocale(localeIdentifier: locale!)
+        dateFormatter.dateFormat = NSDateFormatter.dateFormatFromTemplate("ddMMMyyyy", options: 0, locale: localeTemplate)
+		print(dateFormatter.stringFromDate(date!))
+		
+		return dateFormatter.stringFromDate(date!)
+	}
+	
+	
 }

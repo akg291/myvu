@@ -63,12 +63,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
                 }
                 self.dataItemsByGroup_.append(self.resultMovieItems)
                 self.collectionView!.reloadData()
-                //                let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-                //                if ( indexPaths.contains(indexPath)){
-                //                    self.collectionView?.reloadItemsAtIndexPaths([indexPath])
-                //                }else {
-                //                    self.collectionView!.reloadData()
-                //                }
+
                 
             }else if ( apiResponce?.results?.count < 0 ){
                 
@@ -94,14 +89,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
                 self.dataItemsByGroup__.append(self.resultShowsItems)
                 self.collectionViewA!.reloadData()
                 
-                //self.collectionView?.reloadSections(NSIndexSet.init(index: 1))
-                //                let indexPath = NSIndexPath(forRow: 4, inSection: 0)
-                //                if ( indexPaths.contains(indexPath)){
-                //                    self.collectionView?.reloadItemsAtIndexPaths([indexPath])
-                //                }else {
-                //                    self.collectionView!.reloadData()
-                //                }
-                //self.collectionView!.reloadData()
+    
             }else if ( apiResponce?.results?.count < 0 ){
                 
             }else {
@@ -109,29 +97,11 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
             }
         }
         
-        
-        //self.scroll.contentSize = CGSizeMake(UIScreen.mainScreen().bounds.width,UIScreen.mainScreen().bounds.height + 1);
-        //scroll.backgroundColor = UIColor .redColor()
-        
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
-        
         collectionViewA.delegate = self
         collectionViewA.dataSource = self
-        // Make sure their is sufficient padding above and below the content.
-//        guard let collectionView = collectionView, layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
-//        
-//        collectionView.contentInset.top = HomeCollectionViewContainerVC.minimumEdgePadding - layout.sectionInset.top
-//        collectionView.contentInset.bottom = HomeCollectionViewContainerVC.minimumEdgePadding - layout.sectionInset.bottom
-//        collectionView.contentInset.left = HomeCollectionViewContainerVC.minimumEdgePadding - layout.sectionInset.left
-//        collectionView.contentInset.right = HomeCollectionViewContainerVC.minimumEdgePadding - layout.sectionInset.right
-        
-        //        guard let collectionViewA = collectionViewA, layouta = collectionViewA.collectionViewLayout as? UICollectionViewFlowLayout else { return }
-        //
-        //        collectionViewA.contentInset.top = HomeCollectionViewContainerVC.minimumEdgePadding - layouta.sectionInset.top
-        //        collectionViewA.contentInset.bottom = HomeCollectionViewContainerVC.minimumEdgePadding - layouta.sectionInset.bottom
-        //        collectionViewA.contentInset.left = HomeCollectionViewContainerVC.minimumEdgePadding - layouta.sectionInset.left
-        //        collectionView.contentInset.right = HomeCollectionViewContainerVC.minimumEdgePadding - layouta.sectionInset.right
+
     }
     
     // MARK: UICollectionViewDataSource
@@ -175,7 +145,7 @@ class ViewController: UIViewController,UICollectionViewDelegate,UICollectionView
             sectionDataItems = dataItemsByGroup_[indexPath.section]
         }
         
-        cell.configureWithDataItems(sectionDataItems as! [Result],section: indexPath.section)
+        //**cell.configureWithDataItems(sectionDataItems as! [Result],section: indexPath.section)
     }
     
     func collectionView(collectionView: UICollectionView, canFocusItemAtIndexPath indexPath: NSIndexPath) -> Bool {

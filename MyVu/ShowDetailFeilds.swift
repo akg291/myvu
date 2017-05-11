@@ -18,6 +18,8 @@ class ShowDetailFeilds: UIView {
     @IBOutlet weak var imdbRatingsLbl: UILabel!
     @IBOutlet weak var showPoster : UIImageView!
     @IBOutlet weak var background : UIImageView!
+	
+	@IBOutlet weak var labelRuntime : UILabel!
     
     //MARK: - Class
     class func instanceFromNib() -> UIView {

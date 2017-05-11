@@ -24,7 +24,28 @@ class RelatedMoviesViewClass : UIView,UICollectionViewDelegate,UICollectionViewD
     var requestType : String = ""
     var cellType : String = ""
     private let cellComposer = DataItemCellComposer()
-    private var dataItems_ = [Result]()
+    var dataItems_ = [Result]()
+	
+	
+	func configureCollectionView( data : [Result] ){
+		
+		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+		layout.scrollDirection = .Horizontal
+		layout.minimumInteritemSpacing = 0
+		layout.sectionInset = UIEdgeInsets(top: 0, left: 90, bottom: 0, right: 90)
+		layout.itemSize = CGSize(width: 240 , height:484)
+		layout.minimumLineSpacing = 100
+		self.collectionView.collectionViewLayout = layout
+		self.collectionView.frame = CGRectMake(0, 100, UIScreen.mainScreen().bounds.width, 600)
+		
+		dataItems_ = data
+		let nibName = UINib(nibName: "DataItemCell", bundle:nil)
+		self.collectionView.registerNib(nibName, forCellWithReuseIdentifier: "DataItemCell")
+		collectionView.delegate = self
+		collectionView.dataSource = self
+		collectionView.reloadData()
+
+	}
     
     //MARK: - Initializer
     class func instanceFromNib() -> UIView {
@@ -70,6 +91,8 @@ class RelatedMoviesViewClass : UIView,UICollectionViewDelegate,UICollectionViewD
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if (dataItems_[indexPath.row].group == "Movies"){
             guard let cell = cell as? DataItemCollectionViewCell else { fatalError("Expected to display a DataItemCollectionViewCell") }
+			
+			
             let item = dataItems_[indexPath.row]
             // Configure the cell.
             //cellComposer.composeCell(cell, withDataItem: item)
@@ -103,6 +126,8 @@ class RelatedMoviesViewClass : UIView,UICollectionViewDelegate,UICollectionViewD
                 }
                 dataTask.resume()
             }
+			
+			
             let swipeUPforDeselectBtn:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(RelatedMoviesViewClass.swipedUP(_:)))
             swipeUPforDeselectBtn.direction = .Up
             cell.addGestureRecognizer(swipeUPforDeselectBtn)
@@ -138,7 +163,7 @@ class RelatedMoviesViewClass : UIView,UICollectionViewDelegate,UICollectionViewD
         layout.minimumLineSpacing = 100
         self.collectionView.collectionViewLayout = layout
         self.collectionView.frame = CGRectMake(0, 0, UIScreen.mainScreen().bounds.width, 390)
-        getRelatedMovies(movieID)
+        //getRelatedMovies(movieID)
     }
     func relatedMoviesURL (movieID:Int) -> String {
         //print(APP_CONSTANTS.API_CONSTANTS.BASE_URL + APP_CONSTANTS.API_CONSTANTS.API_TOKKEN + "/movie/" + String (movieID) + "/related")

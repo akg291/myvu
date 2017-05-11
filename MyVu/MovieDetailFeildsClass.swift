@@ -20,6 +20,8 @@ class MovieDetailFeildsClass: UIView {
     @IBOutlet weak var imdbRatingsLbl: UILabel!
     @IBOutlet weak var background : UIImageView!
     @IBOutlet weak var moviePoster : UIImageView!
+	
+	@IBOutlet weak var labelRuntime : UILabel!
     
     //MARK: - Class
     class func instanceFromNib() -> UIView {

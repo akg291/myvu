@@ -48,3 +48,57 @@ class Result: Mappable {
         artWork <- map["artwork_448x252"]
     }
 }
+
+
+
+class SearchModel: Mappable {
+    
+    //MARK: - Properties
+    var movies              : SearchDataModel?
+    var episodes            : SearchDataModel?
+    var shows               : SearchDataModel?
+    var status              : Bool?
+    
+    //MARK: - Init
+    required init?(_ map: Map){
+    }
+    
+    //MARK: - Mapper
+    func mapping(map: Map)    {
+        movies          <- map["data.movies"]
+        episodes        <- map["data.episodes"]
+        shows           <- map["data.shows"]
+        status          <- map["status"]
+    }
+    
+}
+
+class SearchDataModel: Mappable {
+    
+    var total       : Int?
+    var perPage     : Int?
+    var currentPage : Int?
+    var lastPage    : Int?
+    var nextPageUrl : String?
+    var prevPageUrl : String?
+    var type        : String?
+    var query       : String?
+    
+    var data        : [ItemModel]?
+    
+    required init?(_ map: Map) {
+        
+    }
+    
+    func mapping(map: Map) {
+        total       <- map["total"]
+        perPage     <- map["per_page"]
+        currentPage <- map["current_page"]
+        lastPage    <- map["last_page"]
+        nextPageUrl <- map["next_page_url"]
+        prevPageUrl <- map["prev_page_url"]
+        data        <- map["results"]
+		type		<- map["type"]
+    }
+    
+}

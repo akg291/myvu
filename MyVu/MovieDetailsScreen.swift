@@ -15,16 +15,16 @@ import Foundation
 class MovieDetailsScreen : UIViewController,UICollectionViewDelegate,UICollectionViewDataSource {
     
     //MARK: - Outlets
-    @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var backgroundView: UIImageView!
-    @IBOutlet weak var genreAndRatingLbl: UILabel!
-    @IBOutlet weak var movieTitleLbl: UILabel!
+    @IBOutlet weak var collectionView       : UICollectionView!
+    @IBOutlet weak var backgroundView       : UIImageView!
+    @IBOutlet weak var genreAndRatingLbl    : UILabel!
+    @IBOutlet weak var movieTitleLbl        : UILabel!
     @IBOutlet weak var directorAndStarringLbl: UILabel!
-    @IBOutlet weak var movieDescriptionLbl: UILabel!
-    @IBOutlet weak var movieEndingTimeLbl: UILabel!
-    @IBOutlet weak var movieRunTimeLbl: UILabel!
-    @IBOutlet weak var imdbRatingsLbl: UILabel!
-    @IBOutlet weak var moviePoster : UIImageView!
+    @IBOutlet weak var movieDescriptionLbl  : UILabel!
+    @IBOutlet weak var movieEndingTimeLbl   : UILabel!
+    @IBOutlet weak var movieRunTimeLbl      : UILabel!
+    @IBOutlet weak var imdbRatingsLbl       : UILabel!
+    @IBOutlet weak var moviePoster          : UIImageView!
     
     //MARK: - Variables
     var movieId : String = ""
@@ -37,6 +37,7 @@ class MovieDetailsScreen : UIViewController,UICollectionViewDelegate,UICollectio
     }
     override func viewDidLoad()                  {
         super.viewDidLoad()
+				
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         // Make sure their is sufficient padding above and below the content.
@@ -112,8 +113,8 @@ class MovieDetailsScreen : UIViewController,UICollectionViewDelegate,UICollectio
                             }
                     })
                 }
-                self.movieRunTimeLbl.text = self.getRunTime((apiResponce?.duration)!)
-                self.movieEndingTimeLbl.text = self.getEspectedFinishTime((apiResponce?.duration)!)
+                //self.movieRunTimeLbl.text = self.getRunTime((apiResponce?.duration)!)
+                //self.movieEndingTimeLbl.text = self.getEspectedFinishTime((apiResponce?.duration)!)
                 self.getIMDBrating((apiResponce?.imdb)!)
                 //print((apiResponce?.id)!)
                 self.movieID = (apiResponce?.id)!
@@ -129,7 +130,7 @@ class MovieDetailsScreen : UIViewController,UICollectionViewDelegate,UICollectio
         let date = dateFormatter.dateFromString(dateString)
         dateFormatter.dateFormat = "dd MMM yyyy"
         //print(dateFormatter.stringFromDate(date!))
-    }
+        }
     
     // MARK: - UICollectionViewDataSource and Delegate
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int                                {
@@ -187,4 +188,6 @@ class MovieDetailsScreen : UIViewController,UICollectionViewDelegate,UICollectio
                 }
         }
     }
+    
+    
 }

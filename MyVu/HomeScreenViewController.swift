@@ -62,8 +62,8 @@ class HomeScreenViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         guard let collectionView = collectionView,
-            maskView = collectionView.maskView as? GradientMaskView,
-            layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
+            let maskView = collectionView.maskView as? GradientMaskView,
+            let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
             else {
                 return
         }

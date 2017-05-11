@@ -38,19 +38,22 @@ class SourcesSelectionVC : UIViewController,UIScrollViewDelegate {
         }
     }
     
+    
     //MARK: - ViewController lifeCycle and focus
-    override func viewDidLoad()           {
+    override func viewDidLoad() {
         super.viewDidLoad()
         focusGuide = UIFocusGuide()
         view.addLayoutGuide(focusGuide)
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "search-bg.png")!)
         confirmBtn.hidden = true
         deSelectBtn.hidden = true
-        let temp = "https://api-public.guidebox.com/v1.43/US/rKcbKIXDpGiF3GCCoDlhEq7u1BYp1tVj/sources/free/all"
+        let temp = "http://demoz.online/tvios/public/api/get_sources"
         Alamofire.request(.GET,temp).responseObject {
             (response: Response<PlaybackSourceModel, NSError>) in
             let apiResponce = response.result.value
             if ( apiResponce?.results?.count > 0 ){
+                
+                
                 let buttonHeight = 85
                 var y  = CGFloat((0 * buttonHeight))
                 let buttonSpace = 20
@@ -60,6 +63,7 @@ class SourcesSelectionVC : UIViewController,UIScrollViewDelegate {
                     y = CGFloat(((i + 1) * buttonHeight) + ((i + 1) * buttonSpace))
                     button.setTitle(apiResponce!.results![i].display_name, forState: UIControlState.Normal)
                     button.contentHorizontalAlignment = .Left
+                    button.tag = i
                     button.addTarget(self, action: #selector(SourcesSelectionVC.sourceSelected(_:)), forControlEvents: UIControlEvents.PrimaryActionTriggered)
                     self.containerView.addSubview(button)
                 }
@@ -69,9 +73,6 @@ class SourcesSelectionVC : UIViewController,UIScrollViewDelegate {
                 self.scrollView.addSubview(self.containerView)
                 self.confirmBtn.hidden = false
                 self.deSelectBtn.hidden = false
-            }else if (  apiResponce?.results?.count <= 0 ){
-            }else {
-                //print(apiResponce?.toJSONString())
             }
         }
         let swipeLeft:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(SourcesSelectionVC.swipedLeft(_:)))
@@ -94,7 +95,7 @@ class SourcesSelectionVC : UIViewController,UIScrollViewDelegate {
     }
     
     //MARK: - Others
-    func swipedUP(sender:UISwipeGestureRecognizer)   {
+    func swipedUP(sender:UISwipeGestureRecognizer) {
         leftGesture = false
         rightGesture = false
         self.setNeedsFocusUpdate()
@@ -105,12 +106,12 @@ class SourcesSelectionVC : UIViewController,UIScrollViewDelegate {
         self.setNeedsFocusUpdate()
         self.updateFocusIfNeeded()
     }
-    func swipedRight(sender:UISwipeGestureRecognizer){
+    func swipedRight(sender:UISwipeGestureRecognizer) {
         rightGesture = true
         self.setNeedsFocusUpdate()
         self.updateFocusIfNeeded()
     }
-    func sourceSelected(sender: UIButton)            {
+    func sourceSelected(sender: UIButton) {
         dispatch_async(dispatch_get_main_queue(), {
             if self.isHighLighted == false{
                 sender.selected = true;
@@ -123,6 +124,7 @@ class SourcesSelectionVC : UIViewController,UIScrollViewDelegate {
                 sender.setImage(nil, forState: .Normal)
                 sender.imageEdgeInsets = UIEdgeInsets.init(top: 0, left: 950, bottom: 0, right: 0)
                 self.isHighLighted = false
+                
             }
         });
     }
@@ -136,4 +138,30 @@ class SourcesSelectionVC : UIViewController,UIScrollViewDelegate {
             self.isHighLighted = false
         }
     }
+    
+    
+    @IBAction func selectItem( sender: UIButton ){
+        
+        if selectedButtons.count == 0 { return }
+
+        var sourceArr = [Dictionary<String,String>]()
+        
+        for button in selectedButtons {
+            print(button.titleLabel?.text)
+            sourceArr.append(["display_name" : "Hulu"])
+        }
+
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        guard let filterScreen = storyboard.instantiateViewControllerWithIdentifier("HomeCollectionViewContainerVC") as? HomeCollectionViewContainerVC else {
+            fatalError("Unable to instatiate a SearchResultsViewController from the storyboard.")
+        }
+        
+        filterScreen.isFilter       = true
+        filterScreen.filterServicesArr  = sourceArr
+        let filterNavVC = UINavigationController(rootViewController: filterScreen)
+        self.navigationController!.presentViewController(filterNavVC, animated: true, completion: nil)
+        
+    }
+    
+    
 }

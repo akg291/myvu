@@ -20,7 +20,7 @@ class PlaybackSourceModel: Mappable {
     
     //MARK: - Mapper
      func mapping(map: Map)   {
-        results <- map["results"]
+        results <- map["data"]
     }
 }
 
@@ -34,6 +34,7 @@ class PlaybackSource: Mappable {
     var info: String?
     var ios_app: String?
     var android_app: String?
+    var selectedRow : Bool = false
     
     //MARK: - Init
     required init?(_ map: Map){

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class SeasonEpisodeViewCell: UICollectionViewCell {
     // MARK: - Variables
@@ -17,23 +18,26 @@ class SeasonEpisodeViewCell: UICollectionViewCell {
     @IBOutlet weak var episodeDate: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     
+    private var _data:ItemModel!
+    private var isFitler:Bool = false
+    
+    
     // MARK: - Initialization
     override func awakeFromNib()    {
         super.awakeFromNib()
         // These properties are also exposed in Interface Builder.
         imageView.adjustsImageWhenAncestorFocused = true
         imageView.clipsToBounds = false
-        episodeName.alpha = 0.0
-        episodeDate.alpha = 0.0
+		imageView.image = nil
     }
     
     // MARK: - UICollectionReusableView
     override func prepareForReuse() {
         super.prepareForReuse()
         // Reset the label's alpha value so it's initially hidden.
-        episodeName.alpha = 0.0
-        episodeDate.alpha = 0.0
         imageView.image = nil
+		self.episodeName.textColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
+		
     }
     
     // MARK: - UIFocusEnvironment
@@ -45,14 +49,34 @@ class SeasonEpisodeViewCell: UICollectionViewCell {
          */
         coordinator.addCoordinatedAnimations({
             if self.focused {
-                self.episodeName.alpha = 1.0
-                self.episodeDate.alpha = 1.0
+				
+				UIView.transitionWithView(self.episodeName, duration: 0.25, options: .TransitionCrossDissolve, animations: {
+					self.episodeName.textColor = UIColor.whiteColor()
+				}, completion: nil)
+				
+				UIView.transitionWithView(self.episodeDate, duration: 0.25, options: .TransitionCrossDissolve, animations: {
+					self.episodeName.textColor = UIColor.whiteColor()
+					}, completion: nil)
             }
             else {
-                self.episodeName.alpha = 0.0
-                self.episodeDate.alpha = 0.0
+				self.episodeName.textColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
+				self.episodeDate.textColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
             }
             }, completion: nil)
     }
+    
+    
+    // MARK: - Configure Cell
+    func configureCell( data:ItemModel ){
+        _data = data
+        //
+        self.episodeName.text = _data.name
+        self.episodeDate.text = String(_data.display())
+        self.imageView.sd_setImageWithURL(NSURL(string:_data.image!),placeholderImage: UIImage(named: "tv-series-placeholder"))
+		//
+	
+    }
+    
+    
 }
 

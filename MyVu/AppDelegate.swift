@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import Fabric
+import Crashlytics
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,12 +20,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        
+//        guard let searchResultsController1 = storyboard.instantiateViewControllerWithIdentifier("TViewController") as? TViewController else {
+//            fatalError("Unable to instatiate a SearchResultsViewController from the storyboard.")
+//        }
+ 
+		
         guard let searchResultsController1 = storyboard.instantiateViewControllerWithIdentifier("HomeCollectionViewContainerVC") as? HomeCollectionViewContainerVC else {
-            fatalError("Unable to instatiate a SearchResultsViewController from the storyboard.")
+        fatalError("Unable to instatiate a SearchResultsViewController from the storyboard.")
         }
+		
         let searchNavigationController = UINavigationController(rootViewController: searchResultsController1)
         self.window?.rootViewController = searchNavigationController
         self.window?.makeKeyAndVisible()
+        Fabric.with([Crashlytics.self])
+
         return true
     }
     func applicationWillResignActive(application: UIApplication)   {

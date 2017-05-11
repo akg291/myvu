@@ -22,7 +22,8 @@ class SeasonModel: Mappable {
     
     //MARK: - Mapper
     func mapping(map: Map)    {
-        results <- map["results"]
+		
+        results <- map["data"]
         total_results <- map["total_results"]
         error <- map["error"]
     }
@@ -44,12 +45,13 @@ class EpisodeModel: Mappable {
     
     //MARK: - Mapper
     func mapping(map: Map)    {
-        id <- map["id"]
-        content_type <- map["content_type"]
-        episode_number <- map["episode_number"]
-        first_aired <- map["first_aired"]
-        title <- map["title"]
-        poster <- map["thumbnail_400x225"]
+        id              <- map["id"]
+        content_type    <- map["content_type"]
+        episode_number  <- map["episode_number"]
+        first_aired     <- map["first_aired"]
+        title           <- map["title"]
+        poster          <- map["thumbnail_400x225"]
+		
     }
 }
 

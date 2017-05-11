@@ -17,154 +17,225 @@ class ShowDetailsVC : UIViewController,UICollectionViewDelegate,UICollectionView
     //MARK: - Outlets
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var loader: UIActivityIndicatorView!
+	@IBOutlet weak var imgViewbg:UIImageView!
     
     //MARK: - Variables
-    var showID : String = ""
+    var showID : String!
     var showDetailsView = ShowDetailFeilds()
-    var totalSeasons = Int()
+    //var totalSeasons = Int()
+    var dataSeasons = [SeasonModel]()
+    var cellType:String!
+    var playBackSources = PlaybackSourcesViewClass()
     private var sectionsLoaded : [Int] = []
-    
+	
+	
+	override var preferredFocusedView: UIView?{
+		return self.showDetailsView.showTitleLbl
+	}
+	
     //MARK: - ViewController LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        if cellType == nil {
+            fatalError()
+        }
+
+        print(showID)
+		loader.hidesWhenStopped = true
         loader.startAnimating()
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         // Make sure their is sufficient padding above and below the content.
-        guard let collectionView = collectionView, _ = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
+        guard let collectionView = collectionView, let _ = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
         let showDetailFeildsView = ShowDetailFeilds.instanceFromNib()
+        let playBackSources = PlaybackSourcesViewClass.instanceFromNib()
         showDetailsView = showDetailFeildsView as! ShowDetailFeilds
-        Alamofire.request(.GET, getShowDetailsURL()).responseObject {
-            (response: Response<ShowDetailsModel, NSError>) in
-            let downlaoder : SDWebImageDownloader = SDWebImageDownloader .sharedDownloader()
-            let apiResponce = response.result.value
+		
+		let filterStr =  FilterPreference.getString()!
+		let filter = ( filterStr == "" ) ? "" : "?sources=\(filterStr)"
+		
+        let showURL = "http://demoz.online/tvios/public/api/get_item/\(showID)/\(cellType)\(filter)"
+        print(showURL)
+        Alamofire.request(.GET, showURL ).responseObject { (response: Response<ShowDataModel, NSError>) in
+			
+			self.loader.stopAnimating()
+            let apiResponce = response.result.value?.data
+
             if ( apiResponce?.id != nil ){
                 var completeString : String = String()
-                completeString += (apiResponce?.rating)!
-                completeString += " | "
-                var genreString = String()
-                for i in 0..<apiResponce!.genres!.count {
-                    genreString += (apiResponce?.genres![i].title)!
-                    if ( i < ((apiResponce!.genres!.count) - 1) ){
-                        genreString += ", "
-                    }
+                
+                //Rating
+                if let mpaa = apiResponce?.mpaa {
+                    completeString += mpaa
+                    completeString += " | "
+                    var genreString = String()
+					if let genreArr:[Genre] = apiResponce?.genres {
+						for i in 0 ..< genreArr.count {
+							genreString += (apiResponce?.genres![i].title)!
+							if ( i < ((apiResponce!.genres!.count) - 1) ){
+								genreString += ", "
+							}
+						}
+					}
+					completeString += genreString
                 }
-                completeString += genreString
-                completeString += " | "
-                completeString += self.getFormatedDate ((apiResponce?.first_aired)!)
+                
+                //Aired
+                if let firstAired = apiResponce?.first_aired{
+                    completeString += self.getFormatedDate ((firstAired))
+                }
+                
                 self.showDetailsView.genreAndRatingLbl.text = completeString
                 self.showDetailsView.showTitleLbl.text = apiResponce?.title
                 var genreAndNumberofSeasonsLbl : String = String()
-                for i in 0..<1 {
-                    genreAndNumberofSeasonsLbl += (apiResponce?.genres![i].title)!
-                }
-                self.showDetailsView.genreAndNumberofSeasonsLbl.text = genreAndNumberofSeasonsLbl
-                self.showDetailsView.showDescriptionLbl.text = apiResponce?.overview
-                self.getIMDBrating((apiResponce?.imdb_id)!)
-                if let imgUrl = apiResponce?.artwork {
-                    downlaoder.downloadImageWithURL(
-                        NSURL(string: imgUrl),
-                        options: SDWebImageDownloaderOptions.UseNSURLCache,
-                        progress: nil,
-                        completed: { (image, data, error, bool) -> Void in
-                            if image != nil {
-                                dispatch_async(dispatch_get_main_queue(), {
-                                    self.showDetailsView.showPoster.image = image
-                                    self.showDetailsView.background.image = image// backgroundColor = UIColor(patternImage: image)
-                                    //only apply the blur if the user hasn't disabled transparency effects
-                                    if !UIAccessibilityIsReduceTransparencyEnabled() {
-                                        self.view.backgroundColor = UIColor .clearColor()
-                                        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle .Dark)
-                                        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-                                        //always fill the view
-                                        blurEffectView.frame = self.showDetailsView.bounds
-                                        blurEffectView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-                                        self.showDetailsView.background.addSubview(blurEffectView) //if you have more UIViews, use an insertSubview API to place it where needed
-                                        let blurEffect_ = UIBlurEffect(style: UIBlurEffectStyle .Dark)
-                                        let blurEffectView_ = UIVisualEffectView(effect: blurEffect_)
-                                        blurEffectView_.frame = self.collectionView.bounds
-                                        blurEffectView_.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-                                        self.collectionView.backgroundView = blurEffectView_
-                                    } else {
-                                        self.showDetailsView.background.backgroundColor = UIColor .blueColor()
-                                    }
-                                })
-                                self.loader.stopAnimating()
-                            }
-                    })
-                }
-                let getNumberOfSeasonsURL = "https://api-public.guidebox.com/v1.43/US/rKcbKIXDpGiF3GCCoDlhEq7u1BYp1tVj/show/" + self.showID + "/seasons"
-                Alamofire.request(.GET,getNumberOfSeasonsURL).responseObject {
-                    (response: Response<AllSeasonsModel, NSError>) in
-                    let apiResponce = response.result.value
-                    if ( apiResponce?.results?.count > 0 ){
-                        print((apiResponce?.total_results)!)
-                        self.totalSeasons = (apiResponce?.total_results)!
-                        self.showDetailsView.genreAndNumberofSeasonsLbl.text = self.showDetailsView.genreAndNumberofSeasonsLbl.text! + ", " + String(self.totalSeasons) + " Seasons"
-                        self.collectionView.reloadData()
-                    }else if ( apiResponce?.results?.count < 0 ){
-                    }else {
-                        print(apiResponce?.toJSONString())
+                if let genre = apiResponce?.genres{
+                    for i in 0..<1 {
+                        genreAndNumberofSeasonsLbl += (genre[i].title)!
                     }
                 }
+				self.showDetailsView.genreAndNumberofSeasonsLbl.text = genreAndNumberofSeasonsLbl
+				
+				if self.cellType == "episodes"{
+					self.showDetailsView.genreAndNumberofSeasonsLbl.text = apiResponce?.showName
+				}
+				
+				if let imdbrating = apiResponce?.rating {
+					self.showDetailsView.imdbRatingsLbl.text = imdbrating
+				}
+				
+                self.showDetailsView.showDescriptionLbl.text = apiResponce?.overview
+				
+				if let runtime = apiResponce?.duration {
+					self.showDetailsView.labelRuntime.text = "Runtime: \(runtime)"
+				} else {
+					self.showDetailsView.labelRuntime.hidden = true
+				}
+				
+
+                if let imgUrl = apiResponce?.artwork {
+					
+					self.showDetailsView.showPoster.sd_setImageWithURL(NSURL(string: imgUrl))
+					//self.showDetailsView.background.sd_setImageWithURL(NSURL(string: imgUrl))
+	
+					self.imgViewbg.sd_setImageWithURL(NSURL(string: imgUrl))
+					self.view.backgroundColor	= UIColor.clearColor()
+					
+					
+					
+					let blurEffect				= UIBlurEffect(style: UIBlurEffectStyle .Dark)
+					let blurEffectView			= UIVisualEffectView(effect: blurEffect)
+					blurEffectView.frame		= self.showDetailsView.frame
+					blurEffectView.autoresizingMask = [	.FlexibleWidth, .FlexibleHeight, .FlexibleLeftMargin, .FlexibleRightMargin ]
+					self.showDetailsView.background.addSubview(blurEffectView)
+					
+                }
+                
+                if self.cellType != "shows" {
+				self.playBackSources = playBackSources as! PlaybackSourcesViewClass
+				self.playBackSources.title = (apiResponce?.title)!
+				
+				
+				if let sources = apiResponce!.sources {
+					self.playBackSources.setupCollectionView(sources)
+				} else {
+					self.playBackSources.setupCollectionView([])
+				}
+			
+//				let blurEffect_ = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+//				let blurEffectView_ = UIVisualEffectView(effect: blurEffect_)
+//				blurEffectView_.frame = self.playBackSources.bounds
+//				blurEffectView_.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+//				self.playBackSources.bgView.addSubview(blurEffectView_)
+
+				self.playBackSources.frame = CGRectMake(0, 0 + 50, self.playBackSources.frame.width, self.playBackSources.frame.height)
+				self.playBackSources.parentVC = self
+				self.collectionView.addSubview(playBackSources)
+                }
+				
+				
+				
+				let blurEffectNew				= UIBlurEffect(style: UIBlurEffectStyle .Dark)
+				let blurEffectViewNew			= UIVisualEffectView(effect: blurEffectNew)
+				blurEffectViewNew.layer.zPosition = 0
+				blurEffectViewNew.frame		= self.view.frame
+				blurEffectViewNew.autoresizingMask = [	.FlexibleWidth, .FlexibleHeight, .FlexibleLeftMargin, .FlexibleRightMargin ]
+				self.imgViewbg.addSubview(blurEffectViewNew)
+				
+				
+				
+                if apiResponce?.seasons?.count > 0 {
+                    print((apiResponce?.seasons?.count)!)
+                    self.dataSeasons = (apiResponce?.seasons)!
+                    self.collectionView.reloadData()
+                }
+                
                 self.view.addSubview(showDetailFeildsView)
-            }else if ( apiResponce?.error != "" ){
-            }else {
-                print(apiResponce?.toJSONString())
             }
         }
     }
 
     //MARK: - UICollectionViewDelegates
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int                                               {
-        // Our collection view displays 1 section per group of items.
-        //print(totalSeasons)
-        return totalSeasons
+        print(dataSeasons.count)
+        return dataSeasons.count
     }
+    
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int                            {
         // Each section contains a single `CollectionViewContainerCell`.
         //print(section)
         return 1
     }
+    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         // Dequeue a cell from the collection view.
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CollectionViewContainerCell.reuseIdentifier, forIndexPath: indexPath) as! CollectionViewContainerCell
-        cell.activityIndicator.startAnimating()
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(CollectionViewContainerCellOld.reuseIdentifier, forIndexPath: indexPath) as! CollectionViewContainerCellOld
+		
+        cell.activityIndicator.stopAnimating()
+        cell.loadingLabel.hidden = true
         cell.parentViewController = self
-        cell.cellType = "Shows"
-        //cell.requestCellData()
-        cell.collectionType = "Episodes"
-        if ( sectionsLoaded.contains(indexPath.section + 1) ){
-            //print("this section already loaded")
-        }else {
-            cell.requestCellData(Int(showID)!,seasonNumber: (indexPath.section + 1))
-            sectionsLoaded.append(indexPath.section + 1)
-        }
+        cell.cellType = "episode"
+        cell.collectionType = "episode"
+		
+
+		cell.requestCellData(dataSeasons[indexPath.section].results!)
+		sectionsLoaded.append(indexPath.section)
+		
         return cell
     }
+    
     func collectionView(collectionView: UICollectionView, canFocusItemAtIndexPath indexPath: NSIndexPath) -> Bool                {
-        /*
-         Return `false` because we don't want this `collectionView`'s cells to
-         become focused. Instead the `UICollectionView` contained in the cell
-         should become focused.
-         */
+		/*
+		Return `false` because we don't want this `collectionView`'s cells to
+		become focused. Instead the `UICollectionView` contained in the cell
+		should become focused.
+		*/
         return false
     }
+
     func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
-        let view = UICollectionReusableView()
+		
+		let view = UICollectionReusableView()
         //1
         switch kind {
         //2
         case UICollectionElementKindSectionHeader:
             //3
             let headerView = collectionView.dequeueReusableSupplementaryViewOfKind(kind,withReuseIdentifier: "SeasonsHeaderView",forIndexPath: indexPath) as! SeasonsHeaderView
-            headerView.title.text = "Season " + String(indexPath.section + 1)
+			
+			
+			
+            headerView.title.text = "Season \(dataSeasons.count - indexPath.section)"
             return headerView
         default:
             //4
             assert(false, "Unexpected element kind")
         }
         return view
+    }
+    
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        print(indexPath)
     }
     
     //MARK: - Others
@@ -174,10 +245,13 @@ class ShowDetailsVC : UIViewController,UICollectionViewDelegate,UICollectionView
     }
     func getIMDBrating(imdbID:String)    {
         let urlString = "http://www.omdbapi.com/?i=" + imdbID + "&plot=full&r=json"
+        
+        print(urlString)
+        
         Alamofire.request(.GET, urlString)
             .responseJSON { response in
                 if let JSON = response.result.value {
-                    //print(JSON.objectForKey("imdbRating"))
+                    print(JSON.objectForKey("imdbRating"))
                     self.showDetailsView.imdbRatingsLbl.text = JSON.objectForKey("imdbRating") as? String
                 }
         }
@@ -193,4 +267,6 @@ class ShowDetailsVC : UIViewController,UICollectionViewDelegate,UICollectionView
         formatedDateString = dateFormatter.stringFromDate(temp!)
         return formatedDateString
     }
+
+	
 }

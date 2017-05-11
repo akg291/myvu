@@ -16,6 +16,10 @@ class DataItemCollectionViewCell_: UICollectionViewCell {
     //MARK: - Outlets
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var labelfilterServices : UILabel!
+    
+    private var _data: ItemModel!
+    var isFilter:Bool = false
     
     // MARK: - Initialization
     override func awakeFromNib() {
@@ -23,14 +27,14 @@ class DataItemCollectionViewCell_: UICollectionViewCell {
         // These properties are also exposed in Interface Builder.
         imageView.adjustsImageWhenAncestorFocused = true
         imageView.clipsToBounds = false
-        label.alpha = 0.0
+		label.textColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
     }
     
     // MARK: - UICollectionReusableView
     override func prepareForReuse() {
         super.prepareForReuse()
         // Reset the label's alpha value so it's initially hidden.
-        label.alpha = 0.0
+		label.textColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
         imageView.image = nil
     }
     
@@ -41,13 +45,63 @@ class DataItemCollectionViewCell_: UICollectionViewCell {
          This will ensure all animations run alongside each other when the focus
          changes.
          */
+        
+        
         coordinator.addCoordinatedAnimations({
+            
             if self.focused {
-                self.label.alpha = 1.0
+                if (self.isFilter) {
+                    self.labelfilterServices.alpha = 1.0
+                } else {
+
+					
+					UIView.transitionWithView(self.label, duration: 0.25, options: .TransitionCrossDissolve, animations: {
+						self.label.textColor = UIColor.whiteColor()
+						}, completion: nil)
+                }
             }
             else {
-                self.label.alpha = 0.0
+                if (self.isFilter) {
+                    self.labelfilterServices.alpha = 0.0
+                } else {
+
+					self.label.textColor = UIColor(red: 224/255, green: 224/255, blue: 224/255, alpha: 1.0)
+                }
             }
         }, completion: nil)
+		
     }
+    
+    // MARK: - Configure Cell
+    func configureCell( data:ItemModel ){
+        _data = data
+        //
+        
+        if (self.isFilter) {
+            
+            if _data.sources?.count > 0 {
+                labelfilterServices.text          = _data.sources![0].display_name
+            } else {
+                labelfilterServices.text          = ""
+            }
+            
+            labelfilterServices.hidden      = false
+            label.hidden                    = true
+            
+        } else {
+            
+            label.text                      = _data.name
+            label.hidden                    = false
+            labelfilterServices.hidden      = true
+            
+        }
+        
+        self.imageView.sd_setImageWithURL( NSURL(string:_data.image!), placeholderImage: UIImage(named: "movie-placeholder"))
+		
+		
+		
+		
+		
+    }
+    
 }
